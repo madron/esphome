@@ -14,6 +14,8 @@ MULTI_CONF = True
 CONF_MODBUS_ID = "modbus_id"
 CONF_DEVICES = "devices"
 CONF_FUNCTION = "function"
+CONF_ADDRESSES = "addresses"
+CONF_ADDRESS = "address"
 
 ModbusFunctionCode = modbus_ns.enum("ModbusFunctionCode")
 MODBUS_READ_FUNCTION = {
@@ -28,12 +30,19 @@ MODBUS_WRITE_FUNCTION = {
     "write_multiple_registers": ModbusFunctionCode.WRITE_MULTIPLE_REGISTERS,
 }
 
+ADDRESS_SCHEMA = cv.Schema(
+    {
+        cv.Required(CONF_ADDRESS): cv.hex_int_range(min=0, max=9999),
+    }
+)
+
 DEVICE_SCHEMA = cv.Schema(
     {
         cv.Required(CONF_MODBUS_ID): cv.hex_int_range(min=1, max=247),
         cv.Optional(CONF_FUNCTION, default="read_input_registers"): cv.enum(
             MODBUS_READ_FUNCTION
         ),
+        cv.Required(CONF_ADDRESSES): cv.All(cv.ensure_list(ADDRESS_SCHEMA)),
     }
 ).extend(cv.polling_component_schema("60s"))
 
