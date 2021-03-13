@@ -1,0 +1,4 @@
+esphome:
+  name: test
+  platform: ESP8266
+  board: d1_mini_lite

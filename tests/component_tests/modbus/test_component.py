@@ -5,6 +5,19 @@ from esphome import core
 from esphome.components.modbus import CONFIG_SCHEMA
 
 
+def test_setup_default(generate_main):
+    generate_main("tests/component_tests/modbus/test_component_default.yaml")
+
+
+def test_setup_custom(generate_main):
+    main_cpp = generate_main("tests/component_tests/modbus/test_component_custom.yaml")
+    assert "my_uart->set_baud_rate(9600);" in main_cpp
+    assert "my_uart->set_tx_pin(10);" in main_cpp
+    assert "my_uart->set_rx_pin(12);" in main_cpp
+    assert "my_modbus->set_uart_parent(my_uart);" in main_cpp
+    assert "my_modbus->set_setup_priority(12.3f);" in main_cpp
+
+
 def test_empty():
     config = dict()
     validated = CONFIG_SCHEMA(config)
