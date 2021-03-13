@@ -1,0 +1,12 @@
+esphome:
+  name: test
+  platform: ESP32
+  board: nodemcu-32s
+
+uart:
+  baud_rate: 9600
+  rx_pin: GPIO16
+  tx_pin: GPIO17
+
+sensor:
+  - platform: modbus
