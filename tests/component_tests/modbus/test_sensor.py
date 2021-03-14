@@ -101,17 +101,43 @@ def test_duplicate_address_1():
 def test_duplicate_address_2():
     config = dict(
         addresses=[
+            dict(address=8),
+            dict(address=5),
+            dict(address=8),
+            dict(address=5),
+            dict(address=8),
             dict(address=1),
-            dict(address=5),
-            dict(address=5),
-            dict(address=8),
-            dict(address=8),
-            dict(address=8),
         ]
     )
     with pytest.raises(cv.MultipleInvalid) as excinfo:
         CONFIG_SCHEMA(config)
     assert excinfo.value.msg == "Duplicate addresses: 0x05, 0x08."
+    assert excinfo.value.path == ["addresses"]
+
+
+def test_addresses_response_size_ok():
+    config = dict(
+        addresses=[
+            dict(address=2),
+            dict(address=252, address_type="16bit"),
+        ]
+    )
+    CONFIG_SCHEMA(config)
+
+
+def test_addresses_response_size_too_big():
+    config = dict(
+        addresses=[
+            dict(address=252, address_type="32bit"),
+            dict(address=2),
+        ]
+    )
+    with pytest.raises(cv.MultipleInvalid) as excinfo:
+        CONFIG_SCHEMA(config)
+    assert (
+        excinfo.value.msg
+        == "Requested data from address 0x02 to 0xFC is 254 bytes long: The maximum allowed is 253."
+    )
     assert excinfo.value.path == ["addresses"]
 
 

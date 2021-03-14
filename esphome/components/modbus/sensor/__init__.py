@@ -12,6 +12,7 @@ CONF_DEVICE_ID = "device_id"
 CONF_FUNCTION = "function"
 CONF_ADDRESSES = "addresses"
 CONF_ADDRESS_TYPE = "address_type"
+MAXIMUM_RESPONSE_SIZE = 253
 
 FunctionCode = modbus.modbus_ns.enum("FunctionCode")
 READ_FUNCTION = {
@@ -26,17 +27,26 @@ WRITE_FUNCTION = {
     "write_multiple_registers": FunctionCode.WRITE_MULTIPLE_REGISTERS,
 }
 AddressType = modbus.modbus_ns.enum("AddressTypeCode")
-ADRESS_TYPE = {
-    "16bit": AddressType.ADDRESS_TYPE_16BIT,
-    "32bit": AddressType.ADDRESS_TYPE_32BIT,
+ADRESS_TYPE_VALUES = {
+    "16bit": {"enum": AddressType.ADDRESS_TYPE_16BIT, "bytes": 2},
+    "32bit": {"enum": AddressType.ADDRESS_TYPE_32BIT, "bytes": 4},
 }
+ADRESS_TYPE = dict([(k, v["enum"]) for k, v in ADRESS_TYPE_VALUES.items()])
 
 ModbusSensor = modbus.modbus_ns.class_(
     "ModbusSensor", cg.PollingComponent, modbus.ModbusDevice
 )
 
 
+def get_response_size(sorted_addresses):
+    first = sorted_addresses[0]
+    last = sorted_addresses[-1]
+    last_size = ADRESS_TYPE_VALUES[last[CONF_ADDRESS_TYPE]]["bytes"]
+    return last[CONF_ADDRESS] - first[CONF_ADDRESS] + last_size
+
+
 def validate_addresses(value):
+    value = sorted(value, key=lambda i: i[CONF_ADDRESS])
     addresses = [x[CONF_ADDRESS] for x in value]
     duplicate_addresses = [
         str(address)
@@ -49,6 +59,17 @@ def validate_addresses(value):
         else:
             msg = "Duplicate addresses"
         raise cv.Invalid("{}: {}.".format(msg, ", ".join(duplicate_addresses)))
+    # Response size
+    response_size = get_response_size(value)
+    if response_size > MAXIMUM_RESPONSE_SIZE:
+        msg = "Requested data from address {first} to {last} is {size} bytes long: The maximum allowed is {maximum}."
+        msg = msg.format(
+            first=value[0][CONF_ADDRESS],
+            last=value[-1][CONF_ADDRESS],
+            size=response_size,
+            maximum=MAXIMUM_RESPONSE_SIZE,
+        )
+        raise cv.Invalid(msg)
     return value
 
 
