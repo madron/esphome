@@ -11,4 +11,5 @@ uart:
 sensor:
   - platform: modbus
     addresses:
-      - {}
+      - sensor:
+          name: temperature

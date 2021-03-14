@@ -22,5 +22,9 @@ sensor:
     function: read_holding_registers
     addresses:
       - address: 0
+        sensor:
+          name: temperature
       - address: 2
         address_type: 32bit
+        sensor:
+          name: humidity
