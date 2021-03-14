@@ -20,3 +20,7 @@ sensor:
     modbus_id: my_modbus
     device_id: 16
     function: read_holding_registers
+    addresses:
+      - address: 0
+      - address: 2
+        address_type: 32bit
