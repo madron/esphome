@@ -1,8 +1,17 @@
 import collections
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome.const import CONF_ID, CONF_ADDRESS
-from esphome.components import modbus
+from esphome.const import (
+    CONF_ADDRESS,
+    CONF_BINARY_SENSORS,
+    CONF_ID,
+    CONF_SENSOR,
+    CONF_SENSORS,
+    DEVICE_CLASS_EMPTY,
+    ICON_EMPTY,
+    UNIT_EMPTY,
+)
+from esphome.components import binary_sensor, modbus, sensor
 from esphome.core import coroutine
 
 AUTO_LOAD = ["modbus"]
@@ -78,8 +87,14 @@ ADDRESS_SCHEMA = cv.All(
         {
             cv.Optional(CONF_ADDRESS, default=0): cv.hex_int_range(min=0, max=9999),
             cv.Optional(CONF_ADDRESS_TYPE, default="16bit"): cv.enum(ADRESS_TYPE),
+            cv.Optional(CONF_SENSOR): sensor.sensor_schema(UNIT_EMPTY, ICON_EMPTY, 0, DEVICE_CLASS_EMPTY),
+            cv.Optional(CONF_SENSORS): cv.All(cv.ensure_list(sensor.sensor_schema(UNIT_EMPTY, ICON_EMPTY, 0, DEVICE_CLASS_EMPTY))),
+            cv.Optional(CONF_BINARY_SENSORS): cv.All(
+                cv.ensure_list(binary_sensor.BINARY_SENSOR_SCHEMA)
+            ),
         }
     ),
+    cv.has_exactly_one_key(CONF_SENSOR, CONF_SENSORS, CONF_BINARY_SENSORS),
 )
 
 CONFIG_SCHEMA = cv.All(
@@ -105,7 +120,6 @@ def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     yield cg.register_component(var, config)
     yield register_modbus_device(var, config)
-
 
 @coroutine
 def register_modbus_device(var, config):
