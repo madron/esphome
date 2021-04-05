@@ -1,0 +1,30 @@
+esphome:
+  name: test
+  platform: ESP32
+  board: nodemcu-32s
+
+uart:
+  id: my_uart
+  baud_rate: 9600
+  tx_pin: 10
+  rx_pin: 12
+
+modbus:
+  id: my_modbus
+  uart_id: my_uart
+  setup_priority: 12.3
+
+sensor:
+  - platform: modbus
+    update_interval: 500ms
+    modbus_id: my_modbus
+    device_id: 16
+    function: read_holding_registers
+    addresses:
+      - address: 0
+        sensor:
+          name: temperature
+      - address: 2
+        address_type: 32bit
+        sensor:
+          name: humidity
