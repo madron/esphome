@@ -188,6 +188,10 @@ uart:
     baud_rate: 115200
     rx_buffer_size: 1024
 
+modbus:
+  - id: modbus0
+    uart_id: uart0
+
 ota:
   safe_mode: True
   password: 'superlongpasswordthatnoonewillknow'
@@ -706,6 +710,11 @@ sensor:
     altitude_compensation: 10m
     ambient_pressure_compensation: 961mBar
     temperature_offset: 4.2C
+  - platform: sdm
+    modbus_id: modbus0
+    model: sdm120m
+    voltage:
+      name: voltage
   - platform: sgp30
     eco2:
       name: 'Workshop eCO2'
@@ -2010,7 +2019,7 @@ tca9548a:
     multiplexer:
       id: multiplex0
       channel: 0
-    
+
 
 pcf8574:
   - id: 'pcf8574_hub'
