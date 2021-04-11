@@ -9,7 +9,6 @@ from esphome.core import CORE
 class ModbusSensorTest(unittest.TestCase):
     def setUp(self):
         CORE.raw_config = dict()
-        self.config = dict(model="sdm120m")
 
     def test_empty(self):
         config = dict()
@@ -55,7 +54,10 @@ class ModbusSensorTest(unittest.TestCase):
         config = dict(model="unsupported")
         with self.assertRaises(cv.MultipleInvalid) as cm:
             CONFIG_SCHEMA(config)
-        self.assertEqual(cm.exception.msg, "Unknown value 'unsupported', valid options are 'sdm120m'.")
+        self.assertEqual(
+            cm.exception.msg,
+            "Unknown value 'unsupported', valid options are 'sdm120m'.",
+        )
         self.assertEqual(cm.exception.path, ["model"])
 
     def test_sensor_voltage(self):
@@ -67,8 +69,8 @@ class ModbusSensorTest(unittest.TestCase):
         self.assertEqual(validated["voltage"]["device_class"], "voltage")
 
     def test_unsupported_sensor(self):
-        self.config['unsupported'] = dict()
+        config = dict(model="sdm120m", unsupported=dict(name="unsupported"))
         with self.assertRaises(cv.MultipleInvalid) as cm:
-            CONFIG_SCHEMA(self.config)
+            CONFIG_SCHEMA(config)
         self.assertEqual(cm.exception.msg, "extra keys not allowed")
         self.assertEqual(cm.exception.path, ["unsupported"])

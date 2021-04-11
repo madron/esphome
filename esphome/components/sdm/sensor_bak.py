@@ -33,21 +33,13 @@ def validate_schema(schema):
             except KeyError as e:
                 msg = "[{}] is an invalid option for [sensor.sdm] model [{}]."
                 raise cv.Invalid(msg.format(name, schema[CONF_MODEL])) from e
-            if CONF_UNIT_OF_MEASUREMENT not in config and default_config.get(
-                CONF_UNIT_OF_MEASUREMENT, None
-            ):
-                config[CONF_UNIT_OF_MEASUREMENT] = default_config[
-                    CONF_UNIT_OF_MEASUREMENT
-                ]
+            if CONF_UNIT_OF_MEASUREMENT not in config and default_config.get(CONF_UNIT_OF_MEASUREMENT, None):
+                config[CONF_UNIT_OF_MEASUREMENT] = default_config[CONF_UNIT_OF_MEASUREMENT]
             if CONF_ICON not in config and default_config.get(CONF_ICON, None):
                 config[CONF_ICON] = default_config[CONF_ICON]
-            if CONF_ACCURACY_DECIMALS not in config and default_config.get(
-                CONF_ACCURACY_DECIMALS, None
-            ):
+            if CONF_ACCURACY_DECIMALS not in config and default_config.get(CONF_ACCURACY_DECIMALS, None):
                 config[CONF_ACCURACY_DECIMALS] = default_config[CONF_ACCURACY_DECIMALS]
-            if CONF_DEVICE_CLASS not in config and default_config.get(
-                CONF_DEVICE_CLASS, None
-            ):
+            if CONF_DEVICE_CLASS not in config and default_config.get(CONF_DEVICE_CLASS, None):
                 config[CONF_DEVICE_CLASS] = default_config[CONF_DEVICE_CLASS]
     return schema
 
@@ -75,21 +67,17 @@ def to_code(config):
     model_name = config[CONF_MODEL]
     cg.add(var.set_model(model_name))
     for group_index, group in enumerate(get_groups(config)):
-        cg.add(
-            var.add_group(
-                group["start_address"],
-                group["register_count"],
-                group["response_size"],
-            )
-        )
+        cg.add(var.add_group(
+            group["start_address"],
+            group["register_count"],
+            group["response_size"],
+        ))
         for register in group["registers"]:
             sens = yield sensor.new_sensor(register["sensor"])
-            cg.add(
-                var.add_register(
-                    group_index,
-                    register["name"],
-                    register["response_index"],
-                    register["multiply"],
-                    sens,
-                )
-            )
+            cg.add(var.add_register(
+                group_index,
+                register["name"],
+                register["response_index"],
+                register["multiply"],
+                sens,
+            ))

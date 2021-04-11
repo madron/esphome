@@ -1,4 +1,3 @@
-import esphome.config_validation as cv
 from esphome.const import (
     DEVICE_CLASS_EMPTY,
     DEVICE_CLASS_POWER_FACTOR,
@@ -19,62 +18,62 @@ from esphome.const import (
     UNIT_WATT_HOURS,
 )
 
-
+MAXIMUM_REGISTERS_COUNT = 40
 MODEL = dict(
     # https://www.eastroneurope.com/products/view/sdm120modbus
     # https://www.eastroneurope.com/images/uploads/products/manuals/SDM120_Series_Manual_.pdf
     # https://www.eastroneurope.com/images/uploads/products/protocol/SDM120-MODBUS_Protocol.pdf
     sdm120m=dict(
-        voltage = dict(
+        voltage=dict(
             address=0x0000,
             unit_of_measurement=UNIT_VOLT,
             icon=ICON_EMPTY,
             accuracy_decimals=1,
             device_class=DEVICE_CLASS_VOLTAGE,
         ),
-        current = dict(
+        current=dict(
             address=0x0006,
             unit_of_measurement=UNIT_AMPERE,
             icon=ICON_CURRENT_AC,
             accuracy_decimals=2,
             device_class=DEVICE_CLASS_CURRENT,
         ),
-        active_power = dict(
+        active_power=dict(
             address=0x000C,
             unit_of_measurement=UNIT_WATT,
             icon=ICON_EMPTY,
             accuracy_decimals=0,
             device_class=DEVICE_CLASS_POWER,
         ),
-        apparent_power = dict(
+        apparent_power=dict(
             address=0x0012,
             unit_of_measurement=UNIT_VOLT_AMPS,
             icon=ICON_EMPTY,
             accuracy_decimals=0,
             device_class=DEVICE_CLASS_POWER,
         ),
-        reactive_power = dict(
+        reactive_power=dict(
             address=0x0018,
             unit_of_measurement=UNIT_VOLT_AMPS_REACTIVE,
             icon=ICON_EMPTY,
             accuracy_decimals=0,
             device_class=DEVICE_CLASS_POWER,
         ),
-        power_factor = dict(
+        power_factor=dict(
             address=0x001E,
             unit_of_measurement=UNIT_EMPTY,
             icon=ICON_EMPTY,
             accuracy_decimals=2,
             device_class=DEVICE_CLASS_POWER_FACTOR,
         ),
-        frequency = dict(
+        frequency=dict(
             address=0x0046,
             unit_of_measurement=UNIT_HERTZ,
             icon=ICON_EMPTY,
             accuracy_decimals=2,
             device_class=DEVICE_CLASS_EMPTY,
         ),
-        import_active_energy = dict(
+        import_active_energy=dict(
             address=0x0048,
             unit_of_measurement=UNIT_WATT_HOURS,
             icon=ICON_EMPTY,
@@ -82,7 +81,7 @@ MODEL = dict(
             accuracy_decimals=0,
             multiply=1000,
         ),
-        export_active_energy = dict(
+        export_active_energy=dict(
             address=0x004A,
             unit_of_measurement=UNIT_WATT_HOURS,
             icon=ICON_EMPTY,
@@ -90,7 +89,7 @@ MODEL = dict(
             device_class=DEVICE_CLASS_ENERGY,
             multiply=1000,
         ),
-        import_reactive_energy = dict(
+        import_reactive_energy=dict(
             address=0x004C,
             unit_of_measurement=UNIT_VOLT_AMPS_REACTIVE_HOURS,
             icon=ICON_EMPTY,
@@ -98,7 +97,7 @@ MODEL = dict(
             device_class=DEVICE_CLASS_ENERGY,
             multiply=1000,
         ),
-        export_reactive_energy = dict(
+        export_reactive_energy=dict(
             address=0x004E,
             unit_of_measurement=UNIT_VOLT_AMPS_REACTIVE_HOURS,
             icon=ICON_EMPTY,
@@ -106,63 +105,63 @@ MODEL = dict(
             device_class=DEVICE_CLASS_ENERGY,
             multiply=1000,
         ),
-        total_system_power_demand = dict(
+        total_system_power_demand=dict(
             address=0x0054,
             unit_of_measurement=UNIT_WATT,
             icon=ICON_EMPTY,
             accuracy_decimals=0,
             device_class=DEVICE_CLASS_POWER,
         ),
-        maximum_total_system_power_demand = dict(
+        maximum_total_system_power_demand=dict(
             address=0x0056,
             unit_of_measurement=UNIT_WATT,
             icon=ICON_EMPTY,
             accuracy_decimals=0,
             device_class=DEVICE_CLASS_POWER,
         ),
-        import_system_power_demand = dict(
+        import_system_power_demand=dict(
             address=0x0058,
             unit_of_measurement=UNIT_WATT,
             icon=ICON_EMPTY,
             accuracy_decimals=0,
             device_class=DEVICE_CLASS_POWER,
         ),
-        maximum_import_system_power_demand = dict(
+        maximum_import_system_power_demand=dict(
             address=0x005A,
             unit_of_measurement=UNIT_WATT,
             icon=ICON_EMPTY,
             accuracy_decimals=0,
             device_class=DEVICE_CLASS_POWER,
         ),
-        export_system_power_demand = dict(
+        export_system_power_demand=dict(
             address=0x005C,
             unit_of_measurement=UNIT_WATT,
             icon=ICON_EMPTY,
             accuracy_decimals=0,
             device_class=DEVICE_CLASS_POWER,
         ),
-        maximum_export_system_power_demand = dict(
+        maximum_export_system_power_demand=dict(
             address=0x005E,
             unit_of_measurement=UNIT_WATT,
             icon=ICON_EMPTY,
             accuracy_decimals=0,
             device_class=DEVICE_CLASS_POWER,
         ),
-        current_demand = dict(
+        current_demand=dict(
             address=0x0102,
             unit_of_measurement=UNIT_AMPERE,
             icon=ICON_CURRENT_AC,
             accuracy_decimals=2,
             device_class=DEVICE_CLASS_CURRENT,
         ),
-        maximum_current_demand = dict(
+        maximum_current_demand=dict(
             address=0x0108,
             unit_of_measurement=UNIT_AMPERE,
             icon=ICON_CURRENT_AC,
             accuracy_decimals=2,
             device_class=DEVICE_CLASS_CURRENT,
         ),
-        total_active_energy = dict(
+        total_active_energy=dict(
             address=0x0156,
             unit_of_measurement=UNIT_WATT_HOURS,
             icon=ICON_EMPTY,
@@ -170,7 +169,7 @@ MODEL = dict(
             device_class=DEVICE_CLASS_ENERGY,
             multiply=1000,
         ),
-        total_reactive_energy = dict(
+        total_reactive_energy=dict(
             address=0x0158,
             unit_of_measurement=UNIT_VOLT_AMPS_REACTIVE_HOURS,
             icon=ICON_EMPTY,
